@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulir Pendaftaran Resmi KOMPASS 2026 - Kompetisi Agama, Sains, dan Seni MA Unggulan Darul 'Ulum Jombang.">
+    <title>Daftar KOMPASS 2026 | MA Unggulan Darul 'Ulum</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="daftar.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="daftar-header">
+        <div class="daftar-header-inner">
+            <a href="index.html" class="back-link" aria-label="Kembali ke Halaman Utama">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span>Kembali</span>
+            </a>
+            <div class="header-brand">
+                <img src="logo-mau.png" alt="Logo MAU" class="h-logo logo-mau">
+                <div class="header-divider"></div>
+                <img src="logo-kompass.png" alt="Logo KOMPASS" class="h-logo logo-kompass">
+                <div class="brand-text">
+                    <span class="brand-title">KOMPASS 2026</span>
+                    <span class="brand-sub">Formulir Pendaftaran</span>
+                </div>
+            </div>
+            <div class="header-placeholder"></div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="daftar-main">
+        <div class="daftar-card" id="form-container">
+
+            <!-- Step Indicator -->
+            <div class="step-indicator" id="step-indicator">
+                <div class="step-item" data-step="1">
+                    <div class="step-dot active" id="dot-1">1</div>
+                    <span class="step-label">Data Diri</span>
+                </div>
+                <div class="step-line" id="line-1-2"></div>
+                <div class="step-item" data-step="2">
+                    <div class="step-dot" id="dot-2">2</div>
+                    <span class="step-label">Pilih Lomba</span>
+                </div>
+                <div class="step-line" id="line-2-3"></div>
+                <div class="step-item" data-step="3">
+                    <div class="step-dot" id="dot-3">3</div>
+                    <span class="step-label">Konfirmasi</span>
+                </div>
+                <div class="step-line" id="line-3-4"></div>
+                <div class="step-item" data-step="4">
+                    <div class="step-dot" id="dot-4">4</div>
+                    <span class="step-label">Selesai</span>
+                </div>
+            </div>
+
+            <!-- ======================== STEP 1 ======================== -->
+            <div class="step-content" id="step-1">
+                <div class="step-header">
+                    <h2>Data Diri Peserta</h2>
+                    <p>Isi informasi diri Anda dengan lengkap dan benar.</p>
+                </div>
+                <form id="form-step-1" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="s1-fullname">Nama Lengkap <span class="required">*</span></label>
+                            <input type="text" id="s1-fullname" placeholder="Nama sesuai kartu pelajar" autocomplete="name">
+                            <span class="field-error" id="err-fullname"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="s1-nisn">NISN <span class="required">*</span></label>
+                            <input type="text" id="s1-nisn" placeholder="10 digit NISN" inputmode="numeric" maxlength="10">
+                            <span class="field-error" id="err-nisn"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="s1-gender">Jenis Kelamin <span class="required">*</span></label>
+                            <select id="s1-gender">
+                                <option value="">-- Pilih --</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                            <span class="field-error" id="err-gender"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="s1-school">Asal Sekolah <span class="required">*</span></label>
+                            <input type="text" id="s1-school" placeholder="Nama lengkap sekolah / madrasah" autocomplete="organization">
+                            <span class="field-error" id="err-school"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="s1-city">Kabupaten / Kota <span class="required">*</span></label>
+                            <input type="text" id="s1-city" placeholder="Asal kabupaten / kota" autocomplete="address-level2">
+                            <span class="field-error" id="err-city"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="s1-province">Provinsi <span class="required">*</span></label>
+                            <select id="s1-province">
+                                <option value="">-- Pilih --</option>
+                                <option value="Jawa Timur">Jawa Timur</option>
+                                <option value="Bali">Bali</option>
+                            </select>
+                            <span class="field-error" id="err-province"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="s1-whatsapp">Nomor WhatsApp <span class="required">*</span></label>
+                            <input type="tel" id="s1-whatsapp" placeholder="Diawali 08 / 628" inputmode="tel" autocomplete="tel">
+                            <span class="field-error" id="err-whatsapp"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="s1-email">Email <span class="required">*</span></label>
+                            <input type="email" id="s1-email" placeholder="contoh@email.com" autocomplete="email">
+                            <span class="field-error" id="err-email"></span>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <div></div>
+                        <button type="submit" class="btn btn-primary">Lanjut <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ======================== STEP 2 ======================== -->
+            <div class="step-content hidden" id="step-2">
+                <div class="step-header">
+                    <h2>Pilih Cabang Lomba</h2>
+                    <p>Setiap peserta hanya dapat mendaftar 1 (satu) cabang lomba.</p>
+                </div>
+
+                <div class="category-tabs">
+                    <button class="cat-tab active" data-cat="agama">🕌 Agama</button>
+                    <button class="cat-tab" data-cat="sains">🔬 Sains</button>
+                    <button class="cat-tab" data-cat="seni">🎨 Seni</button>
+                </div>
+
+                <div class="lomba-options" id="lomba-options-container">
+                    <!-- Agama -->
+                    <div class="lomba-option-group" data-cat="agama">
+                        <label class="lomba-option-card">
+                            <input type="radio" name="lomba" value="mqk">
+                            <div class="option-card-inner">
+                                <div class="option-icon agama">📖</div>
+                                <div class="option-info">
+                                    <strong>Musabaqah Qiraatul Kutub (MQK)</strong>
+                                    <span>Membaca Kitab Fathul Qorib</span>
+                                    <span class="option-price">Rp 50.000 / Orang</span>
+                                </div>
+                                <div class="option-check">✓</div>
+                            </div>
+                        </label>
+                        <label class="lomba-option-card">
+                            <input type="radio" name="lomba" value="cci">
+                            <div class="option-card-inner">
+                                <div class="option-icon agama">🕌</div>
+                                <div class="option-info">
+                                    <strong>Cerdas Cermat Islam (CCI)</strong>
+                                    <span>Beregu 3 Siswa — Wawasan Islam</span>
+                                    <span class="option-price">Rp 75.000 / Tim</span>
+                                </div>
+                                <div class="option-check">✓</div>
+                            </div>
+                        </label>
+                        <label class="lomba-option-card">
+                            <input type="radio" name="lomba" value="kdm">
+                            <div class="option-card-inner">
+                                <div class="option-icon agama">🎤</div>
+                                <div class="option-info">
+                                    <strong>Kompetisi Da'i Muda (KDM)</strong>
+                                    <span>Pidato / Dakwah Islami</span>
+                                    <span class="option-price">Rp 50.000 / Orang</span>
+                                </div>
+                                <div class="option-check">✓</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Sains -->
+                    <div class="lomba-option-group hidden" data-cat="sains">
+                        <label class="lomba-option-card">
+                            <input type="radio" name="lomba" value="matematika">
+                            <div class="option-card-inner">
+                                <div class="option-icon sains">🔢</div>
+                                <div class="option-info">
+                                    <strong>Olimpiade Matematika</strong>
+                                    <span>Logika, Aljabar, Geometri</span>
+                                    <span class="option-price">Rp 50.000 / Orang</span>
+                                </div>
+                                <div class="option-check">✓</div>
+                            </div>
+                        </label>
+                        <label class="lomba-option-card">
+                            <input type="radio" name="lomba" value="ipa">
+                            <div class="option-card-inner">
+                                <div class="option-icon sains">🔬</div>
+                                <div class="option-info">
+                                    <strong>Olimpiade IPA Terpadu</strong>
+                                    <span>Biologi, Fisika, Kimia Dasar</span>
+                                    <span class="option-price">Rp 50.000 / Orang</span>
+                                </div>
+                                <div class="option-check">✓</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Seni -->
+                    <div class="lomba-option-group hidden" data-cat="seni">
+                        <label class="lomba-option-card">
+                            <input type="radio" name="lomba" value="kkl">
+                            <div class="option-card-inner">
+                                <div class="option-icon seni">🎨</div>
+                                <div class="option-info">
+                                    <strong>Kompetisi Kaligrafi Lukis (KKL)</strong>
+                                    <span>Kaligrafi Kontemporer di Kanvas</span>
+                                    <span class="option-price">Rp 50.000 / Orang</span>
+                                </div>
+                                <div class="option-check">✓</div>
+                            </div>
+                        </label>
+                        <label class="lomba-option-card">
+                            <input type="radio" name="lomba" value="puisi">
+                            <div class="option-card-inner">
+                                <div class="option-icon seni">✍️</div>
+                                <div class="option-info">
+                                    <strong>Cipta & Baca Puisi</strong>
+                                    <span>Menulis & Deklamasi Puisi</span>
+                                    <span class="option-price">Rp 50.000 / Orang</span>
+                                </div>
+                                <div class="option-check">✓</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <span class="field-error" id="err-lomba-select" style="display:block; margin-top: 8px;"></span>
+
+                <div class="step-actions">
+                    <button type="button" class="btn btn-outline" id="prev-step-2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali
+                    </button>
+                    <button type="button" class="btn btn-primary" id="next-step-2">
+                        Lanjut <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ======================== STEP 3 ======================== -->
+            <div class="step-content hidden" id="step-3">
+                <div class="step-header">
+                    <h2>Konfirmasi Data</h2>
+                    <p>Pastikan semua data sudah benar sebelum menyelesaikan pendaftaran.</p>
+                </div>
+
+                <div class="konfirmasi-grid" id="konfirmasi-grid">
+                    <!-- Injected by JS -->
+                </div>
+
+                <div class="pembayaran-info">
+                    <h4>💳 Informasi Pembayaran</h4>
+                    <p>Transfer biaya pendaftaran ke rekening berikut:</p>
+                    <div class="rekening-box">
+                        <div class="rekening-row"><span>Bank</span><strong>BSI (Bank Syariah Indonesia)</strong></div>
+                        <div class="rekening-row"><span>Nomor Rekening</span><strong>8765432100</strong></div>
+                        <div class="rekening-row"><span>Atas Nama</span><strong>MA Unggulan Darul 'Ulum</strong></div>
+                    </div>
+                    <p class="rekening-note">Simpan bukti transfer dan tunjukkan ke panitia saat registrasi ulang.</p>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn btn-outline" id="prev-step-3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali
+                    </button>
+                    <button type="button" class="btn btn-primary" id="submit-daftar">
+                        ✓ Selesaikan Pendaftaran
+                    </button>
+                </div>
+            </div>
+
+            <!-- ======================== STEP 4 (TIKET) ======================== -->
+            <div class="step-content hidden" id="step-4">
+                <div class="step-header success">
+                    <div class="success-icon">🎉</div>
+                    <h2>Pendaftaran Berhasil!</h2>
+                    <p>Selamat! Data Anda telah kami terima. Simpan tiket digital ini sebagai bukti pendaftaran.</p>
+                </div>
+
+                <!-- Digital Ticket -->
+                <div class="tiket" id="tiket-digital">
+                    <div class="tiket-header">
+                        <img src="logo-mau.png" alt="Logo MAU" class="tiket-logo logo-mau">
+                        <div class="tiket-brand">
+                            <img src="logo-kompass.png" alt="Logo KOMPASS" class="tiket-logo logo-kompass">
+                            <div>
+                                <div class="tiket-title">KOMPASS 2026</div>
+                                <div class="tiket-sub">MA Unggulan Darul 'Ulum</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tiket-divider">
+                        <div class="tiket-notch left"></div>
+                        <div class="tiket-dashed"></div>
+                        <div class="tiket-notch right"></div>
+                    </div>
+
+                    <div class="tiket-body">
+                        <div class="tiket-id-row">
+                            <span>No. Peserta</span>
+                            <strong id="tiket-id">KMP-000000</strong>
+                        </div>
+                        <div class="tiket-info-grid">
+                            <div class="tiket-info-item">
+                                <span>Nama</span>
+                                <strong id="tiket-name">-</strong>
+                            </div>
+                            <div class="tiket-info-item">
+                                <span>Asal Sekolah</span>
+                                <strong id="tiket-school">-</strong>
+                            </div>
+                            <div class="tiket-info-item">
+                                <span>Cabang Lomba</span>
+                                <strong id="tiket-lomba">-</strong>
+                            </div>
+                            <div class="tiket-info-item">
+                                <span>Kategori</span>
+                                <strong id="tiket-category">-</strong>
+                            </div>
+                            <div class="tiket-info-item">
+                                <span>Tanggal Daftar</span>
+                                <strong id="tiket-date">-</strong>
+                            </div>
+                            <div class="tiket-info-item">
+                                <span>Status</span>
+                                <strong class="tiket-status-badge">Menunggu Verifikasi</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tiket-footer">
+                        <p>Harap transfer biaya pendaftaran & tunjukkan tiket ini saat registrasi ulang.</p>
+                        <p><strong>19 - 20 September 2026 | Kampus MA Unggulan Darul 'Ulum, Jombang</strong></p>
+                    </div>
+                </div>
+
+                <div class="tiket-actions">
+                    <button class="btn btn-primary" onclick="window.print()">🖨️ Cetak Tiket</button>
+                    <a href="index.html" class="btn btn-outline">← Kembali ke Beranda</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script -->
+    <script src="daftar.js"></script>
+</body>
+</html>
