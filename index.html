@@ -855,17 +855,25 @@
 
             const regId = `REG-${Date.now().toString().slice(-4)}`;
 
-            const newRegistrant = {
-                id: regId,
-                nama: document.getElementById('reg-nama').value,
-                nisn: document.getElementById('reg-nisn').value,
-                sekolah: document.getElementById('reg-sekolah').value,
-                kelas: document.getElementById('reg-kelas').value,
-                wa: document.getElementById('reg-wa').value,
-                lomba: document.getElementById('reg-lomba').value,
-                file: uploadedFileBase64,
-                status: "Pending"
-            };
+	    // Mengambil nilai input WA dan membersihkan spasi di awal/akhir
+	    let waNumber = document.getElementById('reg-wa').value.trim();
+
+	    // Cek jika nomor diawali dengan '08', ubah otomatis menjadi '628'
+	    if (waNumber.startsWith('08')) {
+    		waNumber = '628' + waNumber.slice(2);
+	    }
+
+	    const newRegistrant = {
+	        id: regId,
+	        nama: document.getElementById('reg-nama').value,
+	        nisn: document.getElementById('reg-nisn').value,
+	        sekolah: document.getElementById('reg-sekolah').value,
+	        kelas: document.getElementById('reg-kelas').value,
+ 	        wa: waNumber, // Menggunakan nomor yang sudah diformat otomatis
+	        lomba: document.getElementById('reg-lomba').value,
+	        file: uploadedFileBase64,
+	        status: "Pending"
+	    };
 
             // Save to Supabase
             try {
