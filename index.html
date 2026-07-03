@@ -689,7 +689,7 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT SYSTEM ENGINE (TEROPTIMASI ANTI-DOWN & ANTI-LAG) -->
+<!-- JAVASCRIPT SYSTEM ENGINE (TEROPTIMASI & BEBAS REFRESH) -->
     <script>
         function toggleTheme() {
             const html = document.documentElement;
@@ -762,7 +762,7 @@
             const mMenu = document.getElementById('mobile-menu');
             if(mMenu) mMenu.classList.add('hidden');
             
-            window.scrollTo({ top: 0, behavior: 'auto' }); // Diubah ke auto agar instan di hp low-end
+            window.scrollTo({ top: 0, behavior: 'auto' });
 
             if (viewId === 'home') renderPublicInterface();
             if (viewId === 'news') renderNewsInterface();
@@ -803,7 +803,6 @@
                         categories: appState.settings.categories
                     });
                 } else {
-                    // Penambahan SELECT spesifik untuk memotong beban transfer data (Menghemat Bandwidth Supabase)
                     const { data: settingsData, error: sErr } = await _supabase.from('kompass_settings').select('total_prize_pool, total_branches, categories').eq('id', 'default').single();
                     if (!sErr && settingsData) {
                         appState.settings = {
@@ -828,7 +827,6 @@
                         appState.users = DEFAULT_STATE.users;
                     }
 
-                    // Optimasi Krusial: Kolom 'file' (Base64 raksasa) tidak ditarik saat sinkronisasi massal agar tidak membebani RAM
                     const { data: regData, error: rErr } = await _supabase.from('kompass_registrants').select('id, nama, nisn, sekolah, kelas, wa, lomba, status');
                     if (!rErr && regData) {
                         appState.registrants = regData;
@@ -846,8 +844,16 @@
                 console.error("Supabase Database error: ", err);
                 updateSyncStatus('offline');
             }
-            renderPublicInterface();
-            renderNewsInterface();
+            
+            // Render interface secara aman sesuai view aktif saat ini
+            const activeView = document.querySelector('.app-view.active');
+            if (activeView) {
+                if (activeView.id === 'view-home') renderPublicInterface();
+                if (activeView.id === 'view-news') renderNewsInterface();
+                if (activeView.id === 'view-dashboard') initDashboard();
+            } else {
+                renderPublicInterface();
+            }
         }
 
         function renderPublicInterface() {
@@ -880,7 +886,7 @@
                         </div>
                     `;
                 });
-                container.innerHTML = htmlContent; // Gunakan satu kali innerHTML DOM insert untuk performa rendering
+                container.innerHTML = htmlContent;
             }
 
             const wrapper = document.getElementById('auth-nav-wrapper');
@@ -970,15 +976,15 @@
             const badge2 = document.getElementById('step-badge-2');
 
             if (step === 2) {
-                const nama = document.getElementById('reg-nama').value;
-                const nisn = document.getElementById('reg-nisn').value;
-                const sekolah = document.getElementById('reg-sekolah').value;
+                const nama = document.getElementById('reg-nama').value.trim();
+                const nisn = document.getElementById('reg-nisn').value.trim();
+                const sekolah = document.getElementById('reg-sekolah').value.trim();
                 const kelas = document.getElementById('reg-kelas').value;
-                const wa = document.getElementById('reg-wa').value;
+                const wa = document.getElementById('reg-wa').value.trim();
                 const lomba = document.getElementById('reg-lomba').value;
 
                 if (!nama || !nisn || !sekolah || !kelas || !wa || !lomba) {
-                    alert("Mohon lengkapi seluruh isian data peserta!");
+                    alert("Mohon lengkapi seluruh isian data peserta dengan benar!");
                     return;
                 }
 
@@ -994,12 +1000,10 @@
             }
         }
 
-        // OPTIMASI GAMBAR: Otomatis melakukan kompresi & resizing canvas sisi client sebelum diubah ke Base64 (Mencegah server down/overload kuota)
         document.getElementById('reg-bukti').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
 
-            // Jika PDF, bypass kompresi canvas langsung dibaca biasa
             if (file.type === "application/pdf") {
                 if (file.size > 2 * 1024 * 1024) {
                     alert("Ukuran file PDF tidak boleh melampaui 2MB!");
@@ -1017,7 +1021,6 @@
                 return;
             }
 
-            // Jika Gambar, kompres paksa ke resolusi maksimal lebar 800px dengan kualitas webp 0.6
             const reader = new FileReader();
             reader.onload = function(event) {
                 const img = new Image();
@@ -1036,8 +1039,6 @@
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-
-                    // Output WebP super ringan (rata-rata ukuran menyusut dari 2MB menjadi cuma 60-90 KB!)
                     uploadedFileBase64 = canvas.toDataURL('image/webp', 0.6);
                     
                     document.getElementById('upload-icon').className = "fa-solid fa-file-circle-check text-5xl text-emerald-500 mb-3";
@@ -1057,7 +1058,6 @@
                 return;
             }
 
-            // Mencegah Double Submit saat koneksi lambat dengan mendisable tombol kirim
             const submitBtn = document.getElementById('btn-submit-registration');
             if(submitBtn) {
                 submitBtn.disabled = true;
@@ -1149,8 +1149,11 @@
             if(loginMdl) loginMdl.classList.add('hidden');
         }
 
+        // PERBAIKAN BUG UTAMA: Menghilangkan Efek Refresh Browser Total
         document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+            e.preventDefault(); 
+            e.stopPropagation();
+
             const userInp = document.getElementById('login-username').value.trim().toLowerCase();
             const passInp = document.getElementById('login-password').value;
 
@@ -1166,6 +1169,7 @@
                 const errBox = document.getElementById('login-error');
                 if(errBox) errBox.classList.remove('hidden');
             }
+            return false; 
         });
 
         function handleLogout() {
@@ -1287,7 +1291,6 @@
             }
         }
 
-        // AMBIL REAL-TIME SINGLE ROW: File Base64 Bukti Transfer baru diambil ke memori lokal saat tombol "Detail" diklik admin saja
         async function viewRegistrantDetail(id) {
             const modalBody = document.getElementById('detail-modal-body');
             if (!modalBody) return;
@@ -1296,7 +1299,6 @@
             document.getElementById('modal-detail').classList.remove('hidden');
 
             try {
-                // Query baris data tunggal beserta file base64-nya
                 const { data: r, error } = await _supabase.from('kompass_registrants').select('*').eq('id', id).single();
                 if (error || !r) throw new Error("Gagal mengunduh berkas file detil.");
 
@@ -1383,19 +1385,19 @@
             if (!container) return;
             
             let htmlContent = '';
-            appState.settings.categories.forEach((cat, index) => {
+            appState.settings.categories.forEach((cat) => {
                 htmlContent += `
-                    <div class="flex flex-col sm:flex-row gap-3 border-b pb-4 border-slate-200 dark:border-purple-950/30 items-start w-full">
-                        <input type="hidden" name="cat-id-${index}" value="${cat.id}">
+                    <div class="flex flex-col sm:flex-row gap-3 border-b pb-4 border-slate-200 dark:border-purple-950/30 items-start w-full" data-cat-id="${cat.id}">
+                        <input type="hidden" class="cat-id-field" value="${cat.id}">
                         <div class="w-full sm:w-1/3">
                             <label class="block text-xs font-semibold text-slate-500 dark:text-purple-400 mb-1">Nama Lomba</label>
-                            <input type="text" name="cat-name-${index}" value="${cat.name}" required class="w-full px-3 py-2 border-0 bg-white dark:bg-darkBg text-slate-900 dark:text-white neu-inset text-xs outline-none rounded-lg">
+                            <input type="text" class="cat-name-field w-full px-3 py-2 border-0 bg-white dark:bg-darkBg text-slate-900 dark:text-white neu-inset text-xs outline-none rounded-lg" value="${cat.name}" required>
                         </div>
                         <div class="w-full sm:w-2/3">
                             <label class="block text-xs font-semibold text-slate-500 dark:text-purple-400 mb-1">Deskripsi Singkat</label>
-                            <input type="text" name="cat-desc-${index}" value="${cat.description}" required class="w-full px-3 py-2 border-0 bg-white dark:bg-darkBg text-slate-900 dark:text-white neu-inset text-xs outline-none rounded-lg">
+                            <input type="text" class="cat-desc-field w-full px-3 py-2 border-0 bg-white dark:bg-darkBg text-slate-900 dark:text-white neu-inset text-xs outline-none rounded-lg" value="${cat.description}" required>
                         </div>
-                        <button type="button" onclick="removeCategoryRow(${index})" class="text-rose-600 dark:text-rose-400 text-sm font-bold mt-7 hover:underline"><i class="fa-solid fa-trash"></i></button>
+                        <button type="button" onclick="removeCategoryRow('${cat.id}')" class="text-rose-600 dark:text-rose-400 text-sm font-bold mt-7 hover:underline"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 `;
             });
@@ -1405,29 +1407,34 @@
         function addNewCategoryRow() {
             const container = document.getElementById('set-categories-list');
             if (!container) return;
-            const index = container.children.length;
-            const newId = `LOMBA-${index + 1}`;
+            const newId = `LOMBA-${Date.now()}`;
 
             const newRow = document.createElement('div');
             newRow.className = "flex flex-col sm:flex-row gap-3 border-b pb-4 border-slate-200 dark:border-purple-950/30 items-start w-full";
+            newRow.setAttribute('data-cat-id', newId);
             newRow.innerHTML = `
-                <input type="hidden" name="cat-id-${index}" value="${newId}">
+                <input type="hidden" class="cat-id-field" value="${newId}">
                 <div class="w-full sm:w-1/3">
                     <label class="block text-xs font-semibold text-slate-500 dark:text-purple-400 mb-1">Nama Lomba</label>
-                    <input type="text" name="cat-name-${index}" placeholder="Contoh: Pidato Bahasa Inggris" required class="w-full px-3 py-2 border-0 bg-white dark:bg-darkBg text-slate-900 dark:text-white neu-inset text-xs outline-none rounded-lg">
+                    <input type="text" class="cat-name-field w-full px-3 py-2 border-0 bg-white dark:bg-darkBg text-slate-900 dark:text-white neu-inset text-xs outline-none rounded-lg" placeholder="Contoh: Pidato Bahasa Inggris" required>
                 </div>
                 <div class="w-full sm:w-2/3">
                     <label class="block text-xs font-semibold text-slate-500 dark:text-purple-400 mb-1">Deskripsi Singkat</label>
-                    <input type="text" name="cat-desc-${index}" placeholder="Keterangan singkat materi penilaian lomba" required class="w-full px-3 py-2 border-0 bg-white dark:bg-darkBg text-slate-900 dark:text-white neu-inset text-xs outline-none rounded-lg">
+                    <input type="text" class="cat-desc-field w-full px-3 py-2 border-0 bg-white dark:bg-darkBg text-slate-900 dark:text-white neu-inset text-xs outline-none rounded-lg" placeholder="Keterangan singkat materi penilaian lomba" required>
                 </div>
-                <button type="button" onclick="this.parentElement.remove()" class="text-rose-600 dark:text-rose-400 text-sm font-bold mt-7 hover:underline"><i class="fa-solid fa-trash"></i></button>
+                <button type="button" onclick="removeCategoryRow('${newId}')" class="text-rose-600 dark:text-rose-400 text-sm font-bold mt-7 hover:underline"><i class="fa-solid fa-trash"></i></button>
             `;
             container.appendChild(newRow);
         }
 
-        function removeCategoryRow(index) {
-            appState.settings.categories.splice(index, 1);
-            populateSettingsForm();
+        // PERBAIKAN BUG UTAMA: Menghapus baris berdasarkan ID Unik untuk mencegah salah index baris
+        function removeCategoryRow(catId) {
+            appState.settings.categories = appState.settings.categories.filter(c => c.id !== catId);
+            const container = document.getElementById('set-categories-list');
+            if (container) {
+                const targetRow = container.querySelector(`[data-cat-id="${catId}"]`);
+                if (targetRow) targetRow.remove();
+            }
         }
 
         document.getElementById('settings-form').addEventListener('submit', async function(e) {
@@ -1442,9 +1449,9 @@
 
             for (let i = 0; i < rows.length; i++) {
                 const row = rows[i];
-                const idVal = row.querySelector('input[type="hidden"]').value;
-                const nameVal = row.querySelector(`input[name^="cat-name-"]`).value;
-                const descVal = row.querySelector(`input[name^="cat-desc-"]`).value;
+                const idVal = row.querySelector('.cat-id-field').value;
+                const nameVal = row.querySelector('.cat-name-field').value;
+                const descVal = row.querySelector('.cat-desc-field').value;
 
                 listCategories.push({ id: idVal, name: nameVal, icon: "fa-trophy", description: descVal });
             }
